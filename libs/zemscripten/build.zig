@@ -23,7 +23,13 @@ pub const Package = struct {
 
         const emcc = b.addSystemCommand(&.{
             b.pathJoin(&.{ pkg.emsdk_path, "upstream/emscripten/emcc" }),
-            emcc_options,
+            std.fmt.allocPrint(
+                b.allocator,
+                "-sMALLOC=emmalloc {s}",
+                .{emcc_options},
+            ) catch |err| switch (err) {
+                error.OutOfMemory => @panic("Out of memory"),
+            },
         });
         emcc.step.dependOn(pkg.emsdk_setup_step);
 
