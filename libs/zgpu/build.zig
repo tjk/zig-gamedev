@@ -262,6 +262,7 @@ pub fn checkTargetSupported(target: std.Build.ResolvedTarget) bool {
             ) == .lt) break :blk false;
             break :blk true;
         },
+        .emscripten => true,
         else => false,
     };
     if (supported == false) {
